@@ -1,9 +1,9 @@
 {
-    "Identifier": "",
-    "Slug": "",
-    "Status": "",
-    "Title": "",
-    "Description": "",
+    "Identifier": "eos1086",
+    "Slug": "embeddings-extraction",
+    "Status": "In progress",
+    "Title": "Biomed Roberta Base",
+    "Description": "BioMed-RoBERTa-base is a language model based on the RoBERTa-base with biomedical domain specific pretraining.",
     "Mode": "",
     "Task": [],
     "Input": [],
@@ -12,8 +12,11 @@
     "Output Type": [],
     "Output Shape": "",
     "Interpretation": "",
-    "Tag": [],
-    "Publication": "",
-    "Source Code": "",
-    "License": ""
+    "Tag": [
+        "Biomedical",
+        "Language Model"
+    ],
+    "Publication": "https://aclanthology.org/2020.acl-main.740/",
+    "Source Code": "https://huggingface.co/allenai/biomed_roberta_base",
+    "License": "Apache License 2.0"
 }
