@@ -1,19 +1,13 @@
 # imports
 import os
-import csv
 import sys
+from tkinter.font import names
 import pandas as pd
 import numpy as np
 import transformers
-from transformers import RobertaTokenizerFast, RobertaForSequenceClassification,Trainer, TrainingArguments
 import torch
 import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader
-from sklearn.metrics import accuracy_score, precision_recall_fscore_support
-from tqdm import tqdm
-import wandb
-from bs4 import BeautifulSoup
-import requests
 import random
 from sklearn.model_selection import train_test_split
 from transformers import AutoModel, AutoConfig, AutoTokenizer
@@ -82,19 +76,7 @@ tokenizer = AutoTokenizer.from_pretrained("allenai/biomed_roberta_base")
 # extract embeddings
 def extract_embeddings(path):
 
-    response = requests.get(path)
-    bs = BeautifulSoup(response.text, ['xml'])
-
-    obs = bs.find_all("Obs")
-    #<Obs OBS_CONF="F" OBS_STATUS="A" OBS_VALUE="10.7255" TIME_PERIOD="2005-04-01"/>
-
-    df = pd.DataFrame(columns=['text'])
-
-    for node in obs:
-        df = df.append({'text': node.get("description")}, ignore_index=True)
-
-
-    df = pd.read_xml(path)
+    df = pd.read_csv(path, names = ['description'])
 
     df_train = df  #As we are not learning any loss function, we are not computing 
 
