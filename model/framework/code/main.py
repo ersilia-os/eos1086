@@ -1,6 +1,8 @@
 # imports
 import os
 import sys
+import argparse
+import csv
 from tkinter.font import names
 import pandas as pd
 import numpy as np
@@ -12,106 +14,43 @@ import random
 from sklearn.model_selection import train_test_split
 from transformers import AutoModel, AutoConfig, AutoTokenizer
 
+
+input_file = sys.srgv[1]
+
+output_file = sys.argv[2]
+
 # current file directory
 root = os.path.dirname(os.path.abspath(__file__))
-
-class Settings:
-    batch_size=16
-    max_len=350
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-    seed = 318
-
-def set_seed(seed):
-    random.seed(seed)
-    np.random.seed(seed)
-    torch.manual_seed(seed)
-    torch.cuda.manual_seed(seed)
-    torch.cuda.manual_seed_all(seed)
-    os.environ["PYTHONHASHSEED"] = str(seed)
-    torch.backends.cudnn.deterministic = True
-    
-set_seed(Settings.seed)
-
-class TrainValidDataset(Dataset):
-    def __init__(self, df, tokenizer, max_len):
-        self.df = df
-        self.text = df["description"].values
-        # self.target = df["target"].values
-        self.tokenizer = tokenizer
-        self.max_len = max_len
-        
-    def __len__(self):
-        return len(self.df)
-    
-    def __getitem__(self, idx):
-        texts = self.text[idx]
-        tokenized = self.tokenizer.encode_plus(texts, truncation=True, add_special_tokens=True,
-                                               max_length=self.max_len, padding="max_length")
-        ids = tokenized["input_ids"]
-        mask = tokenized["attention_mask"]
-        # targets = self.target[idx]
-        return {
-            "ids": torch.LongTensor(ids),
-            "mask": torch.LongTensor(mask),
-            # "targets": torch.tensor(targets, dtype=torch.float32)
-        }
+#defining tokenizer
+tokenizer = Automodel.from_pretrained("allenai/biomed_roberta_base")
 
 #defining model
 model = AutoModel.from_pretrained("allenai/biomed_roberta_base")
 
-class BiomedRoBERTa(nn.Module):
-    def __init__(self, pretrained_path):
-        super().__init__()
-        self.biomed_roberta = model
-        
-    def forward(self, ids, mask):
-        output = self.biomed_roberta(ids, attention_mask=mask)
-        return output
+def biomed_roberta_embeddings(df, tokenizer, model, text_list):
 
-model.to(Settings.device)
+    def extract_embeddings(tokenizer, model, text):
+        encoded_input = tokenizer(text, return_tensors='pt')
+        output = model(**encoded_input)
+        last_hidden_state = output[0]
+        cls_embeddings = last_hidden_state[:, 0, :].detach()
 
-#defining tokenizer
-tokenizer = AutoTokenizer.from_pretrained("allenai/biomed_roberta_base")
+        return cls_embeddings.numpy().flatten().tolist()
 
-# extract embeddings
-def extract_embeddings(path):
+    df['embeddings'] = None
+    df['embeddings'] = df['description'].apply(extract_embeddings(tokenizer, model, df['description']))
 
-    df = pd.read_csv(path, names = ['description'])
+    return df
 
-    df_train = df  #As we are not learning any loss function, we are not computing 
+df = pd.read_csv(input_file, columns = 'description')
 
-    train_dataset = TrainValidDataset(df_train, tokenizer, Settings.max_len)
-    train_loader = DataLoader(train_dataset, batch_size=Settings.batch_size,
-                          shuffle=True, num_workers=8, pin_memory=True)
-
-    
-    # make mini batch data
-
-    batch = next(iter(train_loader))
-
-    ids = batch["ids"].to(Settings.device)
-    mask = batch["mask"].to(Settings.device)
-
-    output = model(ids, mask)
-
-    # last_hidden_state
-    last_hidden_state = output[0]
-
-    #cls_embeddings (one method to get last hidden state representations)
-
-    cls_embeddings = last_hidden_state[:, 0, :].detach()
-
-    output_df = pd.DataFrame(cls_embeddings.numpy())
-
-    final_df = pd.concate([df, output_df], axis = 1)
-
-    return final_df
+outputs = biomed_roberta_embeddings(tokenizer, model, 'Hi Hardwaller, Like you I am in a similar situation. My partner was diagnosed 6 years ago, last 2 years her cognitive abilities have decreased significantly to the point where a conversation that lasts more than 3 mins ultimately ends up in a loop of repetition, struggles with words, and for the last 6 months has had issues with her eyes to the point where she can no longer read and struggles to make out people\'s face in photographs. Like your wife, my partner doesn\'t let it bother her (within the family unit/home), according to the Neuro sufferers don\'t actually realise they have a problem. She does accept that she has a small problem with her memory god bless her. She does find going out quite hard as she\'s afraid people will find her "stupid" which is very heartbreaking as she used to be fiercely independent. But we muddle by still trying to have a fulfilling life, we also have children (19/14/9) although oldest is off on his own. I wonder out of interest was your partner ever on Gilenya?')
 
 
 if __name__ == "__main__":
     file_path = sys.argv[1]
     output_path = sys.argv[2]
 
-    dout = extract_embeddings(file_path)
+    dout = biomed_roberta[extract_embeddings(file_path)
 
     dout.to_csv(output_path)

@@ -7,11 +7,11 @@
     "Mode": "Pretrained",
     "Task": ["Representation"],
     "Input": ["Text"],
-    "Input Shape": "Single",
+    "Input Shape": "List",
     "Output": ["Descriptor"],
     "Output Type": ["Float"],
     "Output Shape": "List",
-    "Interpretation": "",
+    "Interpretation": "A list consisting of 768 float points values, obtained after flatening the numpy array (outut of embeddings).",
     "Tag": [
         "Chemical Language Model",
         "Embedding"
