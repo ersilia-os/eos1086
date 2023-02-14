@@ -11,12 +11,12 @@
     "Output": ["Descriptor"],
     "Output Type": ["Float"],
     "Output Shape": "List",
-    "Interpretation": "A list consisting of 768 float points values, obtained after flatening the numpy array (outut of embeddings).",
+    "Interpretation": "A list consisting of 768 float points values which is representation of textual input in numerical vector form.",
     "Tag": [
         "Chemical Language Model",
         "Embedding"
     ],
     "Publication": "https://aclanthology.org/2020.acl-main.740/",
     "Source Code": "https://huggingface.co/allenai/biomed_roberta_base",
-    "License": "Apache License 2.0"
+    "License": "Apache-2.0"
 }
