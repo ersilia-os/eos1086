@@ -13,7 +13,7 @@
     "Output Shape": "List",
     "Interpretation": "A list consisting of 768 float points values which is representation of textual input in numerical vector form.",
     "Tag": [
-        "Chemical Language Model",
+        "Chemical language model",
         "Embedding"
     ],
     "Publication": "https://aclanthology.org/2020.acl-main.740/",
