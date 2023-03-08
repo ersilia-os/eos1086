@@ -2,21 +2,21 @@
     "Identifier": "eos1086",
     "Slug": "embeddings-extraction",
     "Status": "In progress",
-    "Title": "Biomed Roberta Base",
-    "Description": "BioMed-RoBERTa-base is a language model based on the RoBERTa-base with biomedical domain specific pretraining.",
-    "Mode": "",
-    "Task": [],
-    "Input": [],
-    "Input Shape": "",
-    "Output": [],
-    "Output Type": [],
-    "Output Shape": "",
-    "Interpretation": "",
+    "Title": "Text Embeddings Extraction using Pretrained Lamguage Models",
+    "Description": "Syntactic relationship and intrinsic information carried out in textual input data can be represented in the form of text embeddings. These embeddings can be utilised for the downstream tasks like classification, regression etc. BioMed-RoBERTa-base is a trandformer-based language model adapted from RoBERTa-base, pretrained on 2.68 million biomedical domain specific scientific papers (7.55B tokens and 47GB of data). The multi-layer structure of transformer captures different levels of representations in its different levels and learns a rich hierarchy of linguistic information. We are utilizing last hidden state of this hierachal structure to obtain these representations.",
+    "Mode": "Pretrained",
+    "Task": ["Representation"],
+    "Input": ["Text"],
+    "Input Shape": "List",
+    "Output": ["Descriptor"],
+    "Output Type": ["Float"],
+    "Output Shape": "List",
+    "Interpretation": "A list consisting of 768 float points values which is representation of textual input in numerical vector form.",
     "Tag": [
-        "Biomedical",
-        "Language Model"
+        "Chemical language model",
+        "Embedding"
     ],
     "Publication": "https://aclanthology.org/2020.acl-main.740/",
     "Source Code": "https://huggingface.co/allenai/biomed_roberta_base",
-    "License": "Apache License 2.0"
+    "License": "Apache-2.0"
 }
